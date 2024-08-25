@@ -1,0 +1,150 @@
+#include <iostream>
+#include <direct.h>
+#include <string>
+#include <windows.h>
+
+using namespace std;
+
+void list_files();
+void create_directory();
+void change_directory();
+
+int main() {
+    int choice;
+    while (true) {
+        cout << "Main Menu:" << endl;
+        cout << "1. List files in the current directory." << endl;
+        cout << "2. Create a new directory." << endl;
+        cout << "3. Change the working directory." << endl;
+        cout << "4. Exit the program." << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                list_files();
+                break;
+            case 2:
+                create_directory();
+                break;
+            case 3:
+                change_directory();
+                break;
+            case 4:
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
+
+void list_files() {
+    int choice;
+    while (true) {
+        cout << "List Files Menu:" << endl;
+        cout << "1. List all files in the current directory." << endl;
+        cout << "2. List files based on a specific extension." << endl;
+        cout << "3. List files based on a pattern." << endl;
+        cout << "4. Return to Main Menu." << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                WIN32_FIND_DATA ffd;
+                HANDLE hFind = INVALID_HANDLE_VALUE;
+                string path = ".";
+                path += "\\*";
+                hFind = FindFirstFile(path.c_str(), &ffd);
+                if (hFind == INVALID_HANDLE_VALUE) {
+                    cout << "Error finding files." << endl;
+                } else {
+                    do {
+                        cout << ffd.cFileName << endl;
+                    } while (FindNextFile(hFind, &ffd) != 0);
+                    if (GetLastError() != ERROR_NO_MORE_FILES) {
+                        cout << "Error finding files." << endl;
+                    }
+                }
+                FindClose(hFind);
+                break;
+            }
+            case 2: {
+                string extension;
+                cout << "Enter the file extension: ";
+                cin >> extension;
+                WIN32_FIND_DATA ffd;
+                HANDLE hFind = INVALID_HANDLE_VALUE;
+                string path = ".";
+                path += "\\*." + extension;
+                hFind = FindFirstFile(path.c_str(), &ffd);
+                if (hFind == INVALID_HANDLE_VALUE) {
+                    cout << "Error finding files." << endl;
+                } else {
+                    do {
+                        cout << ffd.cFileName << endl;
+                    } while (FindNextFile(hFind, &ffd) != 0);
+                    if (GetLastError() != ERROR_NO_MORE_FILES) {
+                        cout << "Error finding files." << endl;
+                    }
+                }
+                FindClose(hFind);
+                break;
+            }
+            case 3: {
+                string pattern;
+                cout << "Enter the file pattern: ";
+                cin >> pattern;
+                WIN32_FIND_DATA ffd;
+                HANDLE hFind = INVALID_HANDLE_VALUE;
+                string path = ".";
+                path += "\\" + pattern;
+                hFind = FindFirstFile(path.c_str(), &ffd);
+                if (hFind == INVALID_HANDLE_VALUE) {
+                    cout << "Error finding files." << endl;
+                } else {
+                    do {
+                        cout << ffd.cFileName << endl;
+                    } while (FindNextFile(hFind, &ffd) != 0);
+                    if (GetLastError() != ERROR_NO_MORE_FILES) {
+                        cout << "Error finding files." << endl;
+                    }
+                }
+                FindClose(hFind);
+                break;
+            }
+            case 4:
+                return;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    }
+}
+
+void create_directory() {
+    string directory_name;
+    cout << "Enter the name of the directory: ";
+    cin >> directory_name;
+    if (_mkdir(directory_name.c_str()) == 0) {
+        cout << "Directory created successfully." << endl;
+    } else {
+        cout << "Error creating directory." << endl;
+    }
+}
+
+void change_directory() {
+    int choice;
+    while (true) {
+        cout << "Change Directory Menu:" << endl;
+        cout << "1. Move one step back (to the parent directory)." << endl;
+        cout << "2. Move to the root directory." << endl;
+        cout << "3. Move to a specific directory." << endl;
+        cout << "4. Return to Main Menu." << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                if (_
